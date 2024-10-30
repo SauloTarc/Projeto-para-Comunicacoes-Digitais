@@ -8,6 +8,7 @@ def qam_constellation(M):
     real_part = np.arange(-sqrt_M + 1, sqrt_M, 2)
     imag_part = np.arange(-sqrt_M + 1, sqrt_M, 2)
     constellation = np.array([complex(r, i) for r in real_part for i in imag_part])
+    print("Constelação Criada")
     return constellation
 
 def map_audio_to_qam(audio_samples, constellation):
@@ -20,6 +21,7 @@ def map_audio_to_qam(audio_samples, constellation):
         distances = np.abs(I + 1j * Q - constellation)
         nearest_symbol = constellation[np.argmin(distances)]
         symbols.append(nearest_symbol)
+    print("Mapeamento do audio finalizado")
     return np.array(symbols)
 
 def demodulate_qam_to_audio(demodulated_symbols):
@@ -27,6 +29,7 @@ def demodulate_qam_to_audio(demodulated_symbols):
     audio_samples = []
     for symbol in demodulated_symbols:
         audio_samples.extend([np.real(symbol), np.imag(symbol)])
+    print("Demodulação do Audio bem sucedida");
     return np.array(audio_samples).astype(np.int16)
 
 # Carregar áudio e converter para mono e array de amostras
@@ -38,7 +41,7 @@ samples = np.array(audio.get_array_of_samples())
 samples = samples / np.max(np.abs(samples))
 
 # Constelação 16-QAM
-M = 16
+M = 256
 constellation = qam_constellation(M)
 
 # Modulação
