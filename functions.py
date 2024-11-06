@@ -1,7 +1,7 @@
 import numpy as np
-from scipy.io.wavfile import read, write
+import matplotlib.pyplot as plt
+from scipy.io.wavfile import write
 from pydub import AudioSegment
-from scipy.signal import butter, lfilter
 
 def qam_constellation(M):
     """ Define uma constelação QAM para M-QAM."""
@@ -33,36 +33,43 @@ def demodulate_qam_to_audio(demodulated_symbols):
     print("Demodulação do áudio bem-sucedida")
     return np.array(audio_samples).astype(np.int16)
 
-def adaptive_filter(data, window_size=5):
-    """ Aplica um filtro adaptativo de média móvel ao sinal de entrada. """
-    filtered_data = np.copy(data)
-    for i in range(window_size, len(data) - window_size):
-        # Calcula a média adaptativa em uma janela ao redor de cada ponto
-        filtered_data[i] = np.mean(data[i - window_size:i + window_size + 1])
-    print("Filtro adaptativo aplicado")
-    return filtered_data
-
 # Carregar áudio e converter para mono e array de amostras
-audio = AudioSegment.from_file("audio.wav").set_channels(1)
+audio = AudioSegment.from_file("Dan Da Dan (Trecho Dublado).mp3").set_channels(1)
 audio = audio.set_frame_rate(44100)
 samples = np.array(audio.get_array_of_samples())
-
-# Normalizar amostras de áudio
-samples = samples / np.max(np.abs(samples))
-
-# Aplicar filtro adaptativo para reduzir ruído
-filtered_samples = adaptive_filter(samples, window_size=10)
 
 # Constelação 16-QAM
 M = 256
 constellation = qam_constellation(M)
 
-# Modulação com áudio filtrado
-qam_symbols = map_audio_to_qam(filtered_samples, constellation)
+# Modulação com áudio original
+qam_symbols = map_audio_to_qam(samples, constellation)
 
 # Demodulação (conversão de volta para áudio)
 reconstructed_audio_samples = demodulate_qam_to_audio(qam_symbols)
 
 # Converter de volta para um áudio wav
-reconstructed_audio = (reconstructed_audio_samples * 32767).astype(np.int16)
+reconstructed_audio = (reconstructed_audio_samples).astype(np.int16)
 write("reconstructed_audio.wav", audio.frame_rate, reconstructed_audio)
+
+# Plot dos áudios original e reconstruído
+plt.figure(figsize=(12, 6))
+
+# Plot do áudio original
+plt.subplot(2, 1, 1)
+plt.plot(samples[:1000], color='blue', label="Áudio Original")
+plt.title("Áudio Original")
+plt.xlabel("Amostras")
+plt.ylabel("Amplitude")
+plt.legend()
+
+# Plot do áudio reconstruído
+plt.subplot(2, 1, 2)
+plt.plot(reconstructed_audio_samples[:1000], color='red', label="Áudio Reconstruído")
+plt.title("Áudio Reconstruído")
+plt.xlabel("Amostras")
+plt.ylabel("Amplitude")
+plt.legend()
+
+plt.tight_layout()
+plt.show()
