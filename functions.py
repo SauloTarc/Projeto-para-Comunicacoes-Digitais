@@ -31,7 +31,7 @@ def demodulate_qam_to_audio(demodulated_symbols):
     for symbol in demodulated_symbols:
         audio_samples.extend([np.real(symbol), np.imag(symbol)])
     print("Demodulação do áudio bem-sucedida")
-    return np.array(audio_samples).astype(np.int16)
+    return np.array(audio_samples)
 
 # Carregar áudio e converter para mono e array de amostras
 audio = AudioSegment.from_file("Dan Da Dan (Trecho Dublado).mp3").set_channels(1)
@@ -39,7 +39,7 @@ audio = audio.set_frame_rate(44100)
 samples = np.array(audio.get_array_of_samples())
 
 # Constelação 16-QAM
-M = 256
+M = 16
 constellation = qam_constellation(M)
 
 # Modulação com áudio original
@@ -48,9 +48,14 @@ qam_symbols = map_audio_to_qam(samples, constellation)
 # Demodulação (conversão de volta para áudio)
 reconstructed_audio_samples = demodulate_qam_to_audio(qam_symbols)
 
-# Converter de volta para um áudio wav
-reconstructed_audio = (reconstructed_audio_samples).astype(np.int16)
-write("reconstructed_audio.wav", audio.frame_rate, reconstructed_audio)
+# Normalização baseada na amplitude do áudio original
+max_amplitude_original = np.max(np.abs(samples))
+scaling_factor = max_amplitude_original / np.max(np.abs(reconstructed_audio_samples))
+reconstructed_audio_samples = reconstructed_audio_samples * scaling_factor
+
+# Ajuste de ruído e conversão para int16
+reconstructed_audio_samples = (reconstructed_audio_samples * 0.01).astype(np.int16)
+write("reconstructed_audio.wav", audio.frame_rate, reconstructed_audio_samples)
 
 # Plot dos áudios original e reconstruído
 plt.figure(figsize=(12, 6))
@@ -69,6 +74,17 @@ plt.plot(reconstructed_audio_samples[:1000], color='red', label="Áudio Reconstr
 plt.title("Áudio Reconstruído")
 plt.xlabel("Amostras")
 plt.ylabel("Amplitude")
+plt.legend()
+
+# Plotando a constelação QAM
+plt.figure(figsize=(6, 6))
+plt.scatter(constellation.real, constellation.imag, color='purple', marker='o', label="Símbolos QAM")
+plt.axhline(0, color='black', linewidth=0.5)
+plt.axvline(0, color='black', linewidth=0.5)
+plt.title("Constelação 16-QAM")
+plt.xlabel("Parte Real (I)")
+plt.ylabel("Parte Imaginária (Q)")
+plt.grid(True)
 plt.legend()
 
 plt.tight_layout()
