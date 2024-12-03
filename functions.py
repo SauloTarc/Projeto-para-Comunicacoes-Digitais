@@ -3,6 +3,7 @@ from pydub import AudioSegment
 from scipy.io.wavfile import read, write
 import matplotlib.pyplot as plt
 from scipy.signal import resample
+import speech_recognition as sr
 
 # Função para calcular a frequência de Nyquist baseada no máximo da frequência do sinal
 def calcular_frequencia_nyquist(f_max):
@@ -24,6 +25,26 @@ def demodula_pcm(sinal_pcm, original_fs, novo_fs):
     # Ajustando o tamanho das amostras para corresponder à nova taxa de amostragem
     sinal_reconstruido = resample(sinal_pcm, int(len(sinal_pcm) * novo_fs / original_fs))
     return sinal_reconstruido
+
+# Função para transcrever áudio usando a biblioteca SpeechRecognition
+def transcrever_audio(audio_path):
+    recognizer = sr.Recognizer()
+    audio_file = sr.AudioFile(audio_path)
+    
+    with audio_file as source:
+        audio = recognizer.record(source)  # Lê o áudio do arquivo
+        
+    try:
+        texto = recognizer.recognize_google(audio, language="pt-BR")  # Transcrição usando o Google Speech Recognition
+        print("Transcrição do áudio: ")
+        print(texto)
+        return texto
+    except sr.UnknownValueError:
+        print("Não foi possível entender o áudio.")
+        return ""
+    except sr.RequestError as e:
+        print(f"Erro ao solicitar resultados do serviço de reconhecimento de fala: {e}")
+        return ""
 
 # Carregando o arquivo de áudio MP3
 audio = AudioSegment.from_mp3("Falas do Singed - [Português Brasileiro].mp3")  # Substitua pelo seu arquivo MP3
@@ -58,6 +79,23 @@ fs_nyquist = fs_modulado  # A taxa de amostragem do arquivo PCM modulado
 # Demodulando o sinal PCM (reconstruindo o sinal)
 sinal_demodulado = demodula_pcm(sinal_modulado, fs_nyquist, fs_original)
 
+# Salvando o áudio demodulado em um novo arquivo WAV
+write("audio_demodulado.wav", fs_original, np.int16(sinal_demodulado))
+
+# Agora vamos transcrever o áudio demodulado
+# Convertendo o áudio demodulado para o formato WAV para transcrição
+audio_demodulado_path = "audio_demodulado.wav"
+
+# Transcrevendo o áudio
+transcricao = transcrever_audio(audio_demodulado_path)
+
+# Opcional: Salvando a transcrição em um arquivo de texto
+if transcricao:
+    with open("transcricao.txt", "w") as f:
+        f.write(transcricao)
+
+
+
 # Plotando o sinal demodulado para visualização
 plt.figure(figsize=(10, 6))
 plt.subplot(2, 1, 1)
@@ -74,6 +112,3 @@ plt.ylabel("Amplitude")
 
 plt.tight_layout()
 plt.show()
-
-# Salvando o áudio demodulado em um novo arquivo WAV
-write("audio_demodulado.wav", fs_original, np.int16(sinal_demodulado))
