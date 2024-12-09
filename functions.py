@@ -1,9 +1,10 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import speech_recognition as sr
 from pydub import AudioSegment
 from scipy.io.wavfile import read, write
-import matplotlib.pyplot as plt
 from scipy.signal import resample
-import speech_recognition as sr
+from libras_translation import traduzir_frase_com_videos
 
 # Função para calcular a frequência de Nyquist baseada no máximo da frequência do sinal
 def calcular_frequencia_nyquist(f_max):
@@ -91,21 +92,22 @@ transcricao = transcrever_audio(audio_demodulado_path)
 
 # Opcional: Salvando a transcrição em um arquivo de texto
 if transcricao:
-    with open("transcricao.txt", "w") as f:
-        f.write(transcricao)
-
-
+    print("Texto traduzido para glosa:")
+    glosa = traduzir_frase_com_videos(transcricao)
+    print(glosa)
+    with open("transcricao_glosa.txt", "w") as f:
+        f.write(glosa)
 
 # Plotando o sinal demodulado para visualização
 plt.figure(figsize=(10, 6))
 plt.subplot(2, 1, 1)
-plt.plot(sinal_modulado[:5000])
+plt.plot(sinal_modulado[:8000])
 plt.title("Sinal Modulado PCM")
 plt.xlabel("Amostras")
 plt.ylabel("Amplitude")
 
 plt.subplot(2, 1, 2)
-plt.plot(sinal_demodulado[:5000])
+plt.plot(sinal_demodulado[:8000])
 plt.title("Sinal Demodulado (Reconstrução)")
 plt.xlabel("Amostras")
 plt.ylabel("Amplitude")
