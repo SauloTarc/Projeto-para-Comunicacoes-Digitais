@@ -5,9 +5,13 @@ import os
 # Lista de palavras do vocabulário básico de Libras com links para os vídeos (exemplo fictício)
 VIDEOS_LIBRAS = {
     "EU": "gifs/euSm_Prog001.mp4",
-    "M-I-S-T-U-R-A": "gifs/misturar1Sm_Prog001.mp4",
-    "N-A@o": "gifs/nao2Sm_Prog001.mp4",
-    "M-E-X-E-R" : "gifs/mexerSm_Prog001.mp4",    
+    "MISTURA": "gifs/misturar1Sm_Prog001.mp4",
+    "NA@O": "gifs/nao2Sm_Prog001.mp4",
+    "MEXER" : "gifs/mexerSm_Prog001.mp4",    
+    "AGRADAR": "gifs/agradarSm_Prog001.mp4",
+    "CAMINHO": "gifs/caminhoSm_Prog001.mp4",
+    "DOER": "gifs/doerSm_Prog001.mp4",
+    "HORA": "gifs/hora1Sm_Prog001.mp4",
 }
 
 VOCABULARIO_LIBRAS = {
