@@ -43,10 +43,12 @@ VIDEOS_LIBRAS = {
     "HORA": "gifs/hora1Sm_Prog001.mp4",
     "OUÇO": 'gifs/ouvirSm_Prog001.mp4',
     "MISTURA": 'gifs/misturaSm_Prog001.mp4',
-    "ESCURO": 'gifs/escuroSm_Prog001.mp4',
+    "ESCURA": 'gifs/escuroSm_Prog001.mp4',
     "ESTRELAS": 'gifs/estrelaSm_Prog001.mp4',
-    "BILHANTE": 'gifs/brilharSm_Prog001.mp4',
+    "BRILHANTE": 'gifs/brilharSm_Prog001.mp4',
     "NOITE": 'gifs/noite1Sm_Prog001.mp4',
+    "MAIS": 'gifs/mais5Sm_Prog001.mp4',
+    "QUANTO": 'gifs/quanto1Sm_Prog001.mp4'
 }
 
 VOCABULARIO_LIBRAS = {
@@ -73,6 +75,12 @@ VOCABULARIO_LIBRAS = {
     "ESTÁ": "E-S-T-Á",
     "AGRADAR": "A-G-R-A-D-O",
     "BATIDO": "B-A-T-I-D-O",
+    "ESCURA": "E-S-C-U-R-A",
+    "QUANTO": "Q-U-A-N-T-O",
+    "MAIS": "M-A-I-S",
+    "NOITE": "N-O-I-T-E",
+    "BRILHANTE": "B-R-I-L-H-A-N-T-E",
+    "ESTRELAS": "E-S-T-R-E-L-A-S"
 }
 
 # Traduzir uma palavra para glosa

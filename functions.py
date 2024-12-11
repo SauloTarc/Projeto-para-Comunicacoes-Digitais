@@ -48,7 +48,7 @@ def transcrever_audio(audio_path):
         return ""
 
 # Carregando o arquivo de áudio MP3
-audio = AudioSegment.from_mp3("Falas do Singed - [Português Brasileiro].mp3")  # Substitua pelo seu arquivo MP3
+audio = AudioSegment.from_mp3("Braum_ _Quanto mais escuro a noite, mais brilhantes as estrelas._.mp3")  # Substitua pelo seu arquivo MP3
 
 # Convertendo para um array NumPy (mono)
 audio = audio.set_channels(1).set_sample_width(2).set_frame_rate(44100)
